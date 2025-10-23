@@ -9,7 +9,6 @@ export const authMiddleware = async (req, res, next) => {
         const token = req.header("auth-token")?.split(' ')[1] || req.header("auth-token");
         
         if (!token) {
-            console.log('No token provided');
             return res.status(401).json({
                 success: false,
                 message: 'No authentication token provided'
@@ -42,7 +41,6 @@ export const authMiddleware = async (req, res, next) => {
         });
 
         if (!user) {
-            console.log('User not found for token');
             return res.status(404).json({
                 success: false,
                 message: 'User not found'

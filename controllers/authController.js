@@ -6,13 +6,6 @@ import multer from "multer";
 import dotenv from "dotenv";
 dotenv.config();
 
-// Debug: Log Cloudinary config (remove after testing)
-console.log('Cloudinary Config:', {
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME ? 'Loaded' : 'Missing',
-    api_key: process.env.CLOUDINARY_API_KEY ? 'Loaded' : 'Missing',
-    api_secret: process.env.CLOUDINARY_API_SECRET ? 'Loaded' : 'Missing'
-});
-
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
     api_key: process.env.CLOUDINARY_API_KEY,
@@ -63,9 +56,7 @@ export const RegisterController = async (req, res) => {
             let profileImageUrl = null;
             if (req.file) {
                 try {
-                    console.log('📤 Uploading profile image to Cloudinary...');
-                    
-                    // Convert buffer to base64 for Cloudinary upload
+                        // Convert buffer to base64 for Cloudinary upload
                     const base64Image = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
                     
                     const result = await cloudinary.uploader.upload(base64Image, {
@@ -77,7 +68,6 @@ export const RegisterController = async (req, res) => {
                     });
                     
                     profileImageUrl = result.secure_url;
-                    console.log('✅ Profile Upload Success:', profileImageUrl);
                 } catch (cloudErr) {
                     console.error("❌ Cloudinary upload error:", cloudErr);
                     return res.status(500).json({ message: "Profile image upload failed" });
@@ -226,7 +216,6 @@ export const updateProfileImageController = async (req, res) => {
             }
 
             try {
-                console.log('📤 Uploading profile image to Cloudinary...');
                 
                 // Convert buffer to base64 for Cloudinary upload
                 const base64Image = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
@@ -238,8 +227,7 @@ export const updateProfileImageController = async (req, res) => {
                         { quality: 'auto:good' }
                     ]
                 });
-                
-                console.log('✅ Profile Update Success:', result.secure_url);
+
 
                 const updatedUser = await prismaClient.user.update({
                     where: { id: userId },
