@@ -1,8 +1,8 @@
 # 🏢 Flat Broker - Full Stack Real Estate Management System
 
 A **complete full-stack real estate platform** for managing flat listings, built using
-**React.js**, **Node.js**, **Express**, **Prisma**, and **PostgreSQL**. The project 
-features **role-based access** for users (buyers/sellers) and admins, with image uploads, 
+**React.js**, **Node.js**, **Express**, **Prisma**, **Cloudinary** and **PostgreSQL**. The project 
+features **role-based access** for users (buyers/sellers) and admins, with image uploads to cloudinary, 
 enquiries, approval workflows, and dashboards.
 
 ---
@@ -28,7 +28,7 @@ enquiries, approval workflows, and dashboards.
 - Sellers receive and manage enquiries
 - Admin can view all enquiries across the platform
 
-### 📸 Image Uploads
+### 📸 Image Uploads to cloudinary
 
 - Multiple image upload support via **Multer**
 - Images linked to flat records
@@ -49,7 +49,7 @@ enquiries, approval workflows, and dashboards.
 |--------------------|---------------------|---------------|
 | React.js (Vite)    | Node.js + Express   | PostgreSQL    |
 | React Router v6    | Prisma ORM          | Prisma Client |
-| Axios              | JWT + Bcrypt        |               |
+| Axios              | JWT + Bcrypt        | Cloudinary    |
 | Tailwind CSS       | Multer (Image Uploads)|             |
 
 ---
@@ -74,7 +74,6 @@ flat-broker-app/
 │   └── models/ (via Prisma)
 │   └── middlewares/
 │   └── .env
-│   └── uploads/
 │   └── server.js
 │   └── prisma/
 │         └── schema.prisma
@@ -131,7 +130,7 @@ npm run dev
 ## 📸 Image Upload Details
 
 * Supports up to **5 images per flat**
-* Images are stored in the `/uploads` directory on the backend
+* Images are stored on the cloud, using `cloudinary` on the backend
 * File validation included (max size: 5MB per file)
 
 ---

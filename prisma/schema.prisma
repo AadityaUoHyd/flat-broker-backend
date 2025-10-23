@@ -1,6 +1,5 @@
 generator client {
   provider = "prisma-client-js"
-  // output   = "../generated/prisma"
 }
 
 datasource db {
@@ -14,14 +13,15 @@ enum Role {
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  name     String
-  email    String @unique
-  password String
-  role     Role   @default(User)
-  phoneNo  String @unique
-  address  String
-  pincode  String
+  id           Int    @id @default(autoincrement())
+  name         String
+  email        String @unique
+  password     String
+  role         Role   @default(User)
+  phoneNo      String @unique
+  address      String
+  pincode      String
+  profile_image String? // New field for Cloudinary profile image URL
 
   flats Flat[] @relation("UserFlatsOwned")
 
@@ -55,7 +55,7 @@ model Flat {
   address         String
   price           Float
   description     String?
-  images          Json? // store array of image URLs
+  images          Json? // store array of Cloudinary image URLs
   amenities       Json? // store array of amenities like ["Gym","Parking"]
   status          FlatStatus @default(pending)
   sold_to_user_id Int? // optional buyer id if sold

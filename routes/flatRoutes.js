@@ -1,33 +1,42 @@
-import express from "express"
-import { createFlatController, getApprovedFlatsController, getUserFlatsController, markFlatSoldController } from "../controllers/flatController.js";
+import express from "express";
+import { 
+    createFlatController, 
+    getApprovedFlatsController, 
+    getUserFlatsController, 
+    markFlatSoldController 
+} from "../controllers/flatController.js";
 import { authMiddleware } from "../middlewares/authMiddleware.js";
-import multer from "multer"
+import multer from "multer";
 import path from "path"
 import fs from "fs"
-import { file } from "zod";
-
 
 const flatRouter = express.Router();
 
-const storage = multer.diskStorage({
-    destination:(req,file,cb)=>{
-        const userId = req.user.id;
+// Configure multer to use memory storage for file uploads
+const storage = multer.memoryStorage();
 
-        const dir = path.join("uploads",String(userId),"images");
-        fs.mkdirSync(dir,{recursive:true});
-        cb(null,dir);
+// File filter to accept only images
+const fileFilter = (req, file, cb) => {
+    if (file.mimetype.startsWith('image/')) {
+        cb(null, true);
+    } else {
+        cb(new Error('Only image files are allowed!'), false);
     }
-    ,
-    filename:(req,file,cb)=>{
-        const ext = path.extname(file.originalname || "");
-        const name = `${Date.now()}-${Math.round(Math.random()*1e9)}${ext}`;
-        cb(null,name)
-    }
-})
+};
 
-const upload = multer({storage,limits:{fileSize:5*1024*1024}});
+// Initialize multer with configuration
+const upload = multer({
+    storage: storage,
+    limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+    fileFilter: fileFilter
+});
 
-flatRouter.post('/createFlat',authMiddleware,upload.array("images",5),createFlatController)
+// Handle flat creation with file uploads
+flatRouter.post('/createFlat', 
+    authMiddleware, 
+    upload.array('images', 5), // 'images' is the field name in the form, max 5 files
+    createFlatController
+)
 flatRouter.get('/getApprove',getApprovedFlatsController)
 flatRouter.get('/getFlats',authMiddleware,getUserFlatsController)
 flatRouter.put('/:id/sold',authMiddleware,markFlatSoldController)
